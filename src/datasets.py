@@ -13,7 +13,7 @@ class ThingsMEGDataset(torch.utils.data.Dataset):
         self.split = split
         self.num_classes = 1854
         
-        self.X = torch.load(os.path.join(data_dir, f"{split}_X.pt"))
+        self.X = torch.load(os.path.join(data_dir, f"preprocessed_{split}_X.pt"))
         self.subject_idxs = torch.load(os.path.join(data_dir, f"{split}_subject_idxs.pt"))
         
         if split in ["train", "val"]:
@@ -25,9 +25,9 @@ class ThingsMEGDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, i):
         if hasattr(self, "y"):
-            return self.X[i], self.y[i], self.subject_idxs[i]
+            return self.X[i].float(), self.y[i], self.subject_idxs[i]
         else:
-            return self.X[i], self.subject_idxs[i]
+            return self.X[i].float(), self.subject_idxs[i]
         
     @property
     def num_channels(self) -> int:
@@ -36,3 +36,4 @@ class ThingsMEGDataset(torch.utils.data.Dataset):
     @property
     def seq_len(self) -> int:
         return self.X.shape[2]
+    
